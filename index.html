@@ -1,90 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#06110b">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0a1f0a">
 <title>FC Duelo — Futebol 1v1</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="stage">
-  <canvas id="cv"></canvas>
+  <canvas id="game"></canvas>
 
-  <!-- HUD de jogo -->
+  <!-- ================= HUD ================= -->
   <div id="hud" class="hidden">
-    <div id="scoreboard">
-      <div id="sbHome" class="sbTeam"><span class="sbName">VOCÊ</span><span class="sbScore" id="scoreHome">0</span></div>
-      <div id="sbMid"><span id="clock">00:00</span><span id="halfLabel">1º TEMPO</span></div>
-      <div id="sbAway" class="sbTeam"><span class="sbScore" id="scoreAway">0</span><span class="sbName">CPU</span></div>
+    <div id="topbar">
+      <button class="iconBtn" id="btnPause" aria-label="Pausar">&#10074;&#10074;</button>
+
+      <div id="scoreboard">
+        <div class="sbRow">
+          <span class="sbCrest" id="crestA"></span>
+          <span class="sbAbbr" id="abbrA">BRA</span>
+          <span class="sbScore" id="sbScore">0&#8211;0</span>
+          <span class="sbAbbr" id="abbrB">ARG</span>
+          <span class="sbCrest" id="crestB"></span>
+        </div>
+        <div class="sbClock"><span id="sbMin">00:00</span><span class="dot">&#183;</span><span id="sbHalf">1&#186; TEMPO</span></div>
+      </div>
+
+      <button class="iconBtn txt" id="btnMute" aria-label="Som">SOM</button>
     </div>
-    <div id="staminaWrap"><div id="staminaBar"></div></div>
-    <div id="powerWrap"><div id="powerBar"></div></div>
-    <div id="commentary" class="hidden"></div>
-    <div id="cardFlash" class="hidden"></div>
+
+    <canvas id="radar" width="132" height="86"></canvas>
+
+    <div id="banner"><div id="bannerMain"></div><div id="bannerSub"></div></div>
+
+    <div id="powerWrap"><div id="powerFill"></div></div>
+
+    <div id="joyHint">toque e arraste<br>para mover</div>
+    <div id="joyBase"><div id="joyKnob"></div></div>
+
+    <div id="btnCluster">
+      <button class="cbtn" id="btnSprint"><span>CORRIDA</span></button>
+      <button class="cbtn" id="btnTackle"><span id="tackleLbl">DESARME</span></button>
+      <button class="cbtn" id="btnPass"><span>PASSE</span></button>
+      <button class="cbtn big" id="btnShoot"><span>CHUTE</span></button>
+    </div>
   </div>
 
-  <!-- Controles touch -->
-  <div id="touch" class="hidden">
-    <div id="joyZone"><div id="joyHint">toque e arraste<br>para mover</div>
-    <div id="joyBase"><div id="joyKnob"></div></div></div>
-    <div id="btns">
-      <button id="btnShoot" class="abtn abtnShoot">CHUTE</button>
-      <button id="btnSprint" class="abtn abtnSprint">CORRIDA</button>
-      <button id="btnPass" class="abtn abtnPass">PASSE</button>
-      <button id="btnTackle" class="abtn abtnTackle">DESARME</button>
-    </div>
-  </div>
-
-  <!-- Menu principal -->
+  <!-- ================= MENU ================= -->
   <div id="menu" class="screen">
     <div class="panel">
-      <h1>FC DUELO</h1>
-      <p class="tag">FUTEBOL 1v1 · ESTILO FIFA</p>
-      <div class="diffRow">
-        <button class="diff" data-d="0">FÁCIL</button>
-        <button class="diff sel" data-d="1">MÉDIO</button>
-        <button class="diff" data-d="2">DIFÍCIL</button>
+      <div class="logo">FC&nbsp;DUELO</div>
+      <div class="tagline">FUTEBOL 1&#215;1 &#183; NO CANVAS &#183; NO SEU CELULAR</div>
+
+      <label class="lbl">SEU TIME</label>
+      <div class="kitRow" id="kitUser"></div>
+
+      <label class="lbl">RIVAL (CPU)</label>
+      <div class="kitRow" id="kitCpu"></div>
+
+      <label class="lbl">DIFICULDADE</label>
+      <div class="pills" id="diffRow">
+        <button class="pill" data-d="facil">F&#225;cil</button>
+        <button class="pill active" data-d="medio">M&#233;dio</button>
+        <button class="pill" data-d="dificil">Dif&#237;cil</button>
       </div>
-      <button id="btnPlay" class="big">JOGAR</button>
-      <button id="btnMute" class="small">SOM: LIGADO</button>
-      <p class="hint">Teclado: WASD mover · ESPAÇO chute · E passe · Q desarme · SHIFT corrida</p>
+
+      <button id="btnStart" class="primary">COME&#199;AR PARTIDA</button>
+
+      <div class="help">
+        <b>Joystick</b> esquerda move o jogador &#183; segure <b>CHUTE</b> para carregar a for&#231;a<br>
+        <b>PASSE</b> recua para o goleiro &#183; <b>DESARME</b> desliza (com a bola vira <b>FINTA</b>) &#183; <b>CORRIDA</b> acelera
+      </div>
     </div>
   </div>
 
-  <!-- Pausa -->
+  <!-- ================= PAUSA ================= -->
   <div id="pause" class="screen hidden">
-    <div class="panel">
-      <h2>PAUSADO</h2>
-      <button id="btnResume" class="big">CONTINUAR</button>
-      <button id="btnQuit" class="small">SAIR</button>
+    <div class="panel small">
+      <div class="logo sm">PAUSA</div>
+      <div class="scoreLine" id="pauseScore">0 &#8211; 0</div>
+      <button id="btnResume" class="primary">CONTINUAR</button>
+      <button id="btnRestart" class="ghost">REINICIAR PARTIDA</button>
+      <button id="btnQuit" class="ghost">SAIR PARA O MENU</button>
     </div>
   </div>
 
-  <!-- Fim de jogo -->
-  <div id="fulltime" class="screen hidden">
-    <div class="panel wide">
-      <h2 id="ftTitle">FIM DE JOGO</h2>
-      <div id="ftScore">0 x 0</div>
-      <div id="ftStats"></div>
-      <button id="btnRematch" class="big">REVANCHE</button>
-      <button id="btnMenu" class="small">MENU</button>
+  <!-- ================= INTERVALO ================= -->
+  <div id="half" class="screen hidden">
+    <div class="panel small">
+      <div class="logo sm">INTERVALO</div>
+      <div class="scoreLine" id="halfScore">0 &#8211; 0</div>
+      <div class="halfStats" id="halfStats"></div>
+      <button id="btnSecondHalf" class="primary">2&#186; TEMPO &#8594;</button>
     </div>
   </div>
 
-  <!-- Intervalo -->
-  <div id="halftime" class="screen hidden">
-    <div class="panel">
-      <h2>INTERVALO</h2>
-      <div id="htScore">0 x 0</div>
-      <button id="btn2nd" class="big">2º TEMPO</button>
+  <!-- ================= FIM DE JOGO ================= -->
+  <div id="full" class="screen hidden">
+    <div class="panel small">
+      <div class="logo sm">FIM DE JOGO</div>
+      <div class="resultLine" id="resultLine">&#160;</div>
+      <div class="scoreLine big" id="fullScore">0 &#8211; 0</div>
+      <div class="stats" id="statBox"></div>
+      <button id="btnRematch" class="primary">REVANCHE</button>
+      <button id="btnMenu" class="ghost">MENU PRINCIPAL</button>
     </div>
   </div>
-
-  <button id="btnPauseTop" class="hidden">II</button>
 </div>
+
 <script type="module" src="game.js"></script>
 </body>
 </html>
