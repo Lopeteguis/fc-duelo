@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a1f0a">
+<title>FC Duelo — Futebol 1v1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="cv"></canvas>
+
+  <!-- HUD de jogo -->
+  <div id="hud" class="hidden">
+    <div id="scoreboard">
+      <div id="sbHome" class="sbTeam"><span class="sbName">VOCÊ</span><span class="sbScore" id="scoreHome">0</span></div>
+      <div id="sbMid"><span id="clock">00:00</span><span id="halfLabel">1º TEMPO</span></div>
+      <div id="sbAway" class="sbTeam"><span class="sbScore" id="scoreAway">0</span><span class="sbName">CPU</span></div>
+    </div>
+    <div id="staminaWrap"><div id="staminaBar"></div></div>
+    <div id="powerWrap"><div id="powerBar"></div></div>
+    <div id="commentary" class="hidden"></div>
+    <div id="cardFlash" class="hidden"></div>
+  </div>
+
+  <!-- Controles touch -->
+  <div id="touch" class="hidden">
+    <div id="joyZone"><div id="joyHint">toque e arraste<br>para mover</div>
+    <div id="joyBase"><div id="joyKnob"></div></div></div>
+    <div id="btns">
+      <button id="btnShoot" class="abtn abtnShoot">CHUTE</button>
+      <button id="btnSprint" class="abtn abtnSprint">CORRIDA</button>
+      <button id="btnPass" class="abtn abtnPass">PASSE</button>
+      <button id="btnTackle" class="abtn abtnTackle">DESARME</button>
+    </div>
+  </div>
+
+  <!-- Menu principal -->
+  <div id="menu" class="screen">
+    <div class="panel">
+      <h1>FC DUELO</h1>
+      <p class="tag">FUTEBOL 1v1 · ESTILO FIFA</p>
+      <div class="diffRow">
+        <button class="diff" data-d="0">FÁCIL</button>
+        <button class="diff sel" data-d="1">MÉDIO</button>
+        <button class="diff" data-d="2">DIFÍCIL</button>
+      </div>
+      <button id="btnPlay" class="big">JOGAR</button>
+      <button id="btnMute" class="small">SOM: LIGADO</button>
+      <p class="hint">Teclado: WASD mover · ESPAÇO chute · E passe · Q desarme · SHIFT corrida</p>
+    </div>
+  </div>
+
+  <!-- Pausa -->
+  <div id="pause" class="screen hidden">
+    <div class="panel">
+      <h2>PAUSADO</h2>
+      <button id="btnResume" class="big">CONTINUAR</button>
+      <button id="btnQuit" class="small">SAIR</button>
+    </div>
+  </div>
+
+  <!-- Fim de jogo -->
+  <div id="fulltime" class="screen hidden">
+    <div class="panel wide">
+      <h2 id="ftTitle">FIM DE JOGO</h2>
+      <div id="ftScore">0 x 0</div>
+      <div id="ftStats"></div>
+      <button id="btnRematch" class="big">REVANCHE</button>
+      <button id="btnMenu" class="small">MENU</button>
+    </div>
+  </div>
+
+  <!-- Intervalo -->
+  <div id="halftime" class="screen hidden">
+    <div class="panel">
+      <h2>INTERVALO</h2>
+      <div id="htScore">0 x 0</div>
+      <button id="btn2nd" class="big">2º TEMPO</button>
+    </div>
+  </div>
+
+  <button id="btnPauseTop" class="hidden">II</button>
+</div>
+<script type="module" src="game.js"></script>
+</body>
+</html>
